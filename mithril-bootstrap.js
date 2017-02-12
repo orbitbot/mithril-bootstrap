@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('mithril')) :
   typeof define === 'function' && define.amd ? define('mithril-bootstrap', ['mithril'], factory) :
-  (global['mithril-bootstrap'] = factory(global.m));
+  (global.mbs = factory(global.m));
 }(this, (function (m) { 'use strict';
 
 m = 'default' in m ? m['default'] : m;
@@ -32,6 +32,7 @@ var merge = function (target, concatKeys) {
       }
     }
   }
+  return result
 };
 
 var alert = function (content, attrs) { return m('', merge({ class : 'alert' }, 'class', attrs), content); };
