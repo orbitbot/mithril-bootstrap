@@ -17,14 +17,14 @@ var merge = function (target, concatKeys) {
   var concatKeys = [].concat(concatKeys);
   var result = Object(target);
 
-  for (var index = 1; index < args.length; ++index) {
+  for (var index = 0; index < args.length; ++index) {
     var next = args[index];
 
     if (next != null) {
       for (var key in next) {
         if (Object.prototype.hasOwnProperty.call(next, key)) {
-          if (concatKeys.indexOf(key) != -1) {
-            result[key] = result[key] ? result[key].concat(next[key]) : next[key];
+          if (concatKeys.indexOf(key) != -1 && typeof result[key] === 'string') {
+            result[key] = result[key] ? ((result[key]) + " " + (next[key])) : next[key];
           } else {
             result[key] = next[key];
           }
@@ -35,15 +35,20 @@ var merge = function (target, concatKeys) {
   return result
 };
 
-var alert = function (content, attrs) { return m('', merge({ class : 'alert' }, 'class', attrs), content); };
-
-var success = function (content, attrs) { return alert(content, merge({ class : 'alert alert-success' }, 'class', attrs)); };
-var info    = function (content, attrs) { return alert(content, merge({ class : 'alert alert-info'    }, 'class', attrs)); };
-var warning = function (content, attrs) { return alert(content, merge({ class : 'alert alert-warning' }, 'class', attrs)); };
-var danger  = function (content, attrs) { return alert(content, merge({ class : 'alert alert-danger'  }, 'class', attrs)); };
+var alert       = function (content, attrs) { return m('', merge({ class : 'alert' }, 'class', attrs), content); };
+var dismissible = function (content, attrs) { return alert([m('button.close', { type : 'button '}, m.trust('&times;'))].concat(content), merge({ class : 'alert-dismissible' }, 'class', attrs)); };
 
 var alert$1 = {
-  success: success, info: info, warning: warning, danger: danger
+  success : function (content, attrs) { return alert(content, merge({ class : 'alert-success' }, 'class', attrs)); },
+  info    : function (content, attrs) { return alert(content, merge({ class : 'alert-info'    }, 'class', attrs)); },
+  warning : function (content, attrs) { return alert(content, merge({ class : 'alert-warning' }, 'class', attrs)); },
+  danger  : function (content, attrs) { return alert(content, merge({ class : 'alert-danger'  }, 'class', attrs)); },
+  dismissible : {
+    success : function (content, attrs) { return dismissible(content, merge({ class : 'alert-success' }, 'class', attrs)); },
+    info    : function (content, attrs) { return dismissible(content, merge({ class : 'alert-info'    }, 'class', attrs)); },
+    warning : function (content, attrs) { return dismissible(content, merge({ class : 'alert-warning' }, 'class', attrs)); },
+    danger  : function (content, attrs) { return dismissible(content, merge({ class : 'alert-danger'  }, 'class', attrs)); },
+  }
 };
 
 var index = {

@@ -1,15 +1,18 @@
 import m from 'mithril'
 import { merge } from '/utils'
 
-const alert = (content, attrs) => m('', merge({ class : 'alert' }, 'class', attrs), content)
-
-const dismissible = (content, attrs) =>  m('', { class : 'alert-dismissible' }, [m('button.close', { type : 'button '}, m.trust('&times;'))].concat(content))
-
-const success = (content, attrs) => alert(content, merge({ class : 'alert alert-success' }, 'class', attrs))
-const info    = (content, attrs) => alert(content, merge({ class : 'alert alert-info'    }, 'class', attrs))
-const warning = (content, attrs) => alert(content, merge({ class : 'alert alert-warning' }, 'class', attrs))
-const danger  = (content, attrs) => alert(content, merge({ class : 'alert alert-danger'  }, 'class', attrs))
+const alert       = (content, attrs) => m('', merge({ class : 'alert' }, 'class', attrs), content)
+const dismissible = (content, attrs) => alert([m('button.close', { type : 'button '}, m.trust('&times;'))].concat(content), merge({ class : 'alert-dismissible' }, 'class', attrs))
 
 export default {
-  success, info, warning, danger
+  success : (content, attrs) => alert(content, merge({ class : 'alert-success' }, 'class', attrs)),
+  info    : (content, attrs) => alert(content, merge({ class : 'alert-info'    }, 'class', attrs)),
+  warning : (content, attrs) => alert(content, merge({ class : 'alert-warning' }, 'class', attrs)),
+  danger  : (content, attrs) => alert(content, merge({ class : 'alert-danger'  }, 'class', attrs)),
+  dismissible : {
+    success : (content, attrs) => dismissible(content, merge({ class : 'alert-success' }, 'class', attrs)),
+    info    : (content, attrs) => dismissible(content, merge({ class : 'alert-info'    }, 'class', attrs)),
+    warning : (content, attrs) => dismissible(content, merge({ class : 'alert-warning' }, 'class', attrs)),
+    danger  : (content, attrs) => dismissible(content, merge({ class : 'alert-danger'  }, 'class', attrs)),
+  }
 }
