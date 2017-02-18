@@ -2,7 +2,7 @@ import m from 'mithril'
 import { merge } from '/utils'
 
 const alert       = (content, attrs) => m('', merge({ class : 'alert' }, 'class', attrs), content)
-const dismissible = (content, attrs) => alert([m('button.close', { type : 'button '}, m.trust('&times;'))].concat(content), merge({ class : 'alert-dismissible' }, 'class', attrs))
+const dismissible = (content, attrs) => m('', merge({ class : 'alert alert-dismissible' }, 'class', attrs), [m('button.close[type="button"]', { onclick : attrs.dismissClick || '' }, m.trust('&times;'))].concat(content))
 
 export default {
   success : (content, attrs) => alert(content, merge({ class : 'alert-success' }, 'class', attrs)),

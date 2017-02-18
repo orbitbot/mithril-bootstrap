@@ -36,7 +36,7 @@ var merge = function (target, concatKeys) {
 };
 
 var alert       = function (content, attrs) { return m('', merge({ class : 'alert' }, 'class', attrs), content); };
-var dismissible = function (content, attrs) { return alert([m('button.close', { type : 'button '}, m.trust('&times;'))].concat(content), merge({ class : 'alert-dismissible' }, 'class', attrs)); };
+var dismissible = function (content, attrs) { return m('', merge({ class : 'alert alert-dismissible' }, 'class', attrs), [m('button.close[type="button"]', { onclick : attrs.dismissClick || '' }, m.trust('&times;'))].concat(content)); };
 
 var alert$1 = {
   success : function (content, attrs) { return alert(content, merge({ class : 'alert-success' }, 'class', attrs)); },
