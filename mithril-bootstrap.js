@@ -35,19 +35,47 @@ var merge = function (target, concatKeys) {
   return result
 };
 
-var alert       = function (content, attrs) { return m('', merge({ class : 'alert' }, 'class', attrs), content); };
-var dismissible = function (content, attrs) { return m('', merge({ class : 'alert alert-dismissible' }, 'class', attrs), [m('button.close[type="button"]', { onclick : attrs.dismissClick || '' }, m.trust('&times;'))].concat(content)); };
+// for onbeforeremove and CSS transitions
+var delay = function (duration) { return new Promise(function (resolve) { return setTimeout(resolve, duration); }); };
+
+var alert = function (defaultClasses) { return ({
+
+  oncreate : function (ref) {
+    var dom = ref.dom;
+
+    if (/\bfade\b/.test(dom.className))
+      { setTimeout(function () { dom.className = dom.className.replace('fade', 'fade.show'); }, 16); }
+  },
+
+  onbeforeremove : function (ref) {
+    var dom = ref.dom;
+
+    if (/\bfade.show\b/.test(dom.className)) {
+      dom.classList.value.replace('fade.show', 'fade');
+      return delay(150)
+    }
+  },
+
+  view : function (ref) {
+    var attrs = ref.attrs;
+    var children = ref.children;
+
+    return m('', merge({ class: defaultClasses }, 'class', attrs), [
+                                    m('button.close[type="button"]', { onclick : attrs.dismissClick || '' }, m.trust('&times;'))
+                                  ].concat(children));
+  }
+}); };
 
 var alert$1 = {
-  success : function (content, attrs) { return alert(content, merge({ class : 'alert-success' }, 'class', attrs)); },
-  info    : function (content, attrs) { return alert(content, merge({ class : 'alert-info'    }, 'class', attrs)); },
-  warning : function (content, attrs) { return alert(content, merge({ class : 'alert-warning' }, 'class', attrs)); },
-  danger  : function (content, attrs) { return alert(content, merge({ class : 'alert-danger'  }, 'class', attrs)); },
+  success : alert('alert alert-success'),
+  info    : alert('alert alert-info'),
+  warning : alert('alert alert-warning'),
+  danger  : alert('alert alert-danger'),
   dismissible : {
-    success : function (content, attrs) { return dismissible(content, merge({ class : 'alert-success' }, 'class', attrs)); },
-    info    : function (content, attrs) { return dismissible(content, merge({ class : 'alert-info'    }, 'class', attrs)); },
-    warning : function (content, attrs) { return dismissible(content, merge({ class : 'alert-warning' }, 'class', attrs)); },
-    danger  : function (content, attrs) { return dismissible(content, merge({ class : 'alert-danger'  }, 'class', attrs)); },
+    success : alert('alert alert-dismissable alert-success'),
+    info    : alert('alert alert-dismissable alert-info'),
+    warning : alert('alert alert-dismissable alert-warning'),
+    danger  : alert('alert alert-dismissable alert-danger'),
   }
 };
 

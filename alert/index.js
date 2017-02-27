@@ -1,18 +1,35 @@
 import m from 'mithril'
-import { merge } from '/utils'
+import { merge, delay } from '/utils'
 
-const alert       = (content, attrs) => m('', merge({ class : 'alert' }, 'class', attrs), content)
-const dismissible = (content, attrs) => m('', merge({ class : 'alert alert-dismissible' }, 'class', attrs), [m('button.close[type="button"]', { onclick : attrs.dismissClick || '' }, m.trust('&times;'))].concat(content))
+
+const alert = (defaultClasses) => ({
+
+  oncreate : ({ dom }) => {
+    if (/\bfade\b/.test(dom.className))
+      setTimeout(() => { dom.className = dom.className.replace('fade', 'fade.show') }, 16)
+  },
+
+  onbeforeremove : ({ dom }) => {
+    if (/\bfade.show\b/.test(dom.className)) {
+      dom.classList.value.replace('fade.show', 'fade')
+      return delay(150)
+    }
+  },
+
+  view : ({ attrs, children }) => m('', merge({ class: defaultClasses }, 'class', attrs), [
+                                    m('button.close[type="button"]', { onclick : attrs.dismissClick || '' }, m.trust('&times;'))
+                                  ].concat(children))
+})
 
 export default {
-  success : (content, attrs) => alert(content, merge({ class : 'alert-success' }, 'class', attrs)),
-  info    : (content, attrs) => alert(content, merge({ class : 'alert-info'    }, 'class', attrs)),
-  warning : (content, attrs) => alert(content, merge({ class : 'alert-warning' }, 'class', attrs)),
-  danger  : (content, attrs) => alert(content, merge({ class : 'alert-danger'  }, 'class', attrs)),
+  success : alert('alert alert-success'),
+  info    : alert('alert alert-info'),
+  warning : alert('alert alert-warning'),
+  danger  : alert('alert alert-danger'),
   dismissible : {
-    success : (content, attrs) => dismissible(content, merge({ class : 'alert-success' }, 'class', attrs)),
-    info    : (content, attrs) => dismissible(content, merge({ class : 'alert-info'    }, 'class', attrs)),
-    warning : (content, attrs) => dismissible(content, merge({ class : 'alert-warning' }, 'class', attrs)),
-    danger  : (content, attrs) => dismissible(content, merge({ class : 'alert-danger'  }, 'class', attrs)),
+    success : alert('alert alert-dismissable alert-success'),
+    info    : alert('alert alert-dismissable alert-info'),
+    warning : alert('alert alert-dismissable alert-warning'),
+    danger  : alert('alert alert-dismissable alert-danger'),
   }
 }

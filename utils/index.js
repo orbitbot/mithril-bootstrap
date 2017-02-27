@@ -23,3 +23,6 @@ export const merge = (target, concatKeys, ...args) => {
   }
   return result
 }
+
+// for onbeforeremove and CSS transitions
+export const delay = (duration) => new Promise((resolve) => setTimeout(resolve, duration))
