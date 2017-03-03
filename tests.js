@@ -7,4 +7,3 @@ glob('*/**.spec.js', { ignore : 'node_modules' }, (err, files) => {
   files.forEach((path) => require('./' + path))
   o.run()
 })
-

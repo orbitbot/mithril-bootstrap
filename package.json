@@ -4,7 +4,7 @@
   "description": "Boostrap wrappers for Mithril.js",
   "main": "index.js",
   "scripts": {
-    "develop": "onchange '*/*.js' -- npm t",
+    "develop": "onchange '*/*.js' -i -- npm t",
     "test": "node tests.js"
   },
   "repository": {
@@ -21,6 +21,15 @@
     "mithril": "1.0.1",
     "onchange": "3.2.1",
     "ospec": "1.2.3",
-    "reify": "0.4.7"
+    "reify": "0.4.7",
+    "bootstrap" : "3.3.7",
+    "mithril": "1.0.1",
+    "rollup": "0.41.4",
+    "rollup-plugin-buble": "0.15.0",
+    "rollup-plugin-commonjs": "7.0.0",
+    "rollup-plugin-filesize": "1.0.1",
+    "rollup-plugin-node-resolve": "2.0.0",
+    "rollup-plugin-root-import": "0.2.1",
+    "rollup-watch": "3.2.2"
   }
 }
