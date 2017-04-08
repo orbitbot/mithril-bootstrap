@@ -5,13 +5,15 @@ import { merge, delay } from '/utils'
 const alert = (defaultClasses) => ({
 
   oncreate : ({ dom }) => {
-    if (/\bfade\b/.test(dom.className))
-      setTimeout(() => { dom.className = dom.className.replace('fade', 'fade.show') }, 16)
+    if (/\bfade\b/.test(dom.className)) {
+      var temp = dom.offsetHeight // force browser to redraw, need to store value for effect
+      dom.className = dom.className.replace('fade', 'fade in')
+    }
   },
 
   onbeforeremove : ({ dom }) => {
-    if (/\bfade.show\b/.test(dom.className)) {
-      dom.classList.value.replace('fade.show', 'fade')
+    if (/\bfade in\b/.test(dom.className)) {
+      dom.className = dom.className.replace('fade in', 'fade')
       return delay(150)
     }
   },
